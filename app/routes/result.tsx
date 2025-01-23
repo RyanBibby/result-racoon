@@ -21,12 +21,12 @@ export async function loader({ params }: Route.LoaderArgs): Promise<string> {
   }
 }
 
-
 export default function Result({ loaderData, params }: Route.ComponentProps) {
   const page = loaderData;
   const regex = /Results-table-row.+?data-name="([\s\S]+?)".+?data-runs="(\d+)"/g;
 
-  const rawResults = Array.from(page.matchAll(regex)).map((match) => [match[1], match[2]]);
+  const rawResults = Array.from(page.matchAll(regex), (match) => [match[1], match[2]]);
+
   const results = processResults(rawResults);
 
   return (
