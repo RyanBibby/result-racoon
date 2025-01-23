@@ -1,7 +1,7 @@
 import { Form } from "react-router";
 
 export default function DaisyHome() {
-  return(
+  return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
@@ -15,7 +15,7 @@ export default function DaisyHome() {
                 placeholder="Run number"
                 className="input input-bordered w-full max-w-xs"
                 type="search"
-              /> 
+              />
               <button type="submit" className="btn btn-primary mt-5">Process</button>
             </Form>
           </div>

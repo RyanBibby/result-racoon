@@ -1,46 +1,35 @@
 import type { Route } from "../routes/+types/result";
 import fetch from "node-fetch"
 import processResults from "../calculate/stats"
-export async function loader({ params }: Route.LoaderArgs) : Promise<string> {
-  const runNumber = params.runnumber;
 
-  
-  const url = `https://www.parkrun.org.uk/hillsborough/results/${runNumber}/`;
+export async function loader({ params }: Route.LoaderArgs): Promise<string> {
 
-  let text : string = "moo"
+  const url = `https://www.parkrun.org.uk/hillsborough/results/${params.runnumber}/`;
 
   try {
-    const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" }});
+    const response = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15" } });
     if (!response.ok) {
       console.log("fail");
       throw new Error(`Response status: ${response.status}`);
     }
 
-    text = await response.text();
-  } catch (error) {
+    return await response.text();
+  } catch (error: any) {
     console.log("nope");
     console.error(error.message);
-    text = "nope"
+    return "nope"
   }
-
-  
-  return text;
 }
 
 
+export default function Result({ loaderData, params }: Route.ComponentProps) {
+  const page = loaderData;
+  const regex = /Results-table-row.+?data-name="([\s\S]+?)".+?data-runs="(\d+)"/g;
 
-export default function Result({ loaderData, params } : Route.ComponentProps) {
-  const  text  = loaderData;
-  const re = /Results-table-row.+?data-name="([\s\S]+?)".+?data-runs="(\d+)"/g;
-
-  const rawResults : Array<Array<string>> = Array.from(text.matchAll(re)).map((matches: Array<string>) => [matches[1], matches[2]]);
-  console.log(rawResults)
+  const rawResults = Array.from(page.matchAll(regex)).map((match) => [match[1], match[2]]);
   const results = processResults(rawResults);
-  // for (const groups of text.matchAll(re)) {
-  //   console.log([groups[1],groups[2]]);
-  // }
 
-  return(
+  return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
@@ -53,15 +42,15 @@ export default function Result({ loaderData, params } : Route.ComponentProps) {
               <tbody>
                 <tr className="hover">
                   <td>Total runners</td>
-                  <td>{results["total"]}</td>
+                  <td>{results.total}</td>
                 </tr>
                 <tr className="hover">
-                  <td>First timers</td>
-                  <td>{results["firstTime"]}</td>
+                  <td>First ever parkrun</td>
+                  <td>{results.firstTime}</td>
                 </tr>
                 <tr className="hover">
                   <td>25 runs</td>
-                  <td>{results["25"]}</td>
+                  <td>{results[25]}</td>
                 </tr>
                 <tr className="hover">
                   <td>50 runs</td>
@@ -82,12 +71,10 @@ export default function Result({ loaderData, params } : Route.ComponentProps) {
               </tbody>
             </table>
           </div>
-          <div>
-          </div>
         </div>
       </div>
     </div>
-  
+
   );
 }
 
