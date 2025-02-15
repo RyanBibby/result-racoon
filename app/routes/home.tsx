@@ -2,8 +2,8 @@ import { Form } from "react-router";
 
 export default function DaisyHome() {
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content text-center">
+    <div className="hero">
+      <div className="text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">Result Racoon</h1>
           <div className="mt-5 mb-5">

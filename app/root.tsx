@@ -1,10 +1,12 @@
 import {
+  Form,
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useParams,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -24,6 +26,13 @@ export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
+
+export async function loader({ params }: Route.LoaderArgs) {
+
+  const runnumber = params.runnumber;
+}
+
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -42,8 +51,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ params }: Route.ComponentProps) {
+  const runnumber = params.runnumber
+  return (
+    <>
+      <div className="navbar bg-base-100">
+        <div className="flex-1">
+          <a href="/" className="btn btn-ghost text-xl">Result Racoon</a>
+        </div>
+        <div className="flex-none gap-2">
+          <div className="form-control">
+            <Form action="results-process" method="post" >
+              <input type="search" placeholder="Run number" className="input input-bordered w-24 md:w-auto" defaultValue={runnumber} name="runnumber"/>
+            </Form>
+          </div>
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Outlet />
+    </>);
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

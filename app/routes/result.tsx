@@ -30,13 +30,10 @@ export default function Result({ loaderData, params }: Route.ComponentProps) {
   const results = processResults(rawResults);
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
-      <div className="hero-content text-center">
+    <div className="hero">
+      <div className="text-center">
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold">Result Racoon</h1>
-          <div className="mt-5 mb-5">
-            Stats for run {params.runnumber}
-          </div>
+          <h1 className="text-3xl font-bold mb-5">Stats for run {params.runnumber}</h1>
           <div className="overflow-x-auto">
             <table className="table">
               <tbody>
